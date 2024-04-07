@@ -19,6 +19,8 @@ class Upload extends Input
 
     public string $inputType = 'hidden';
 
+    public string $jsPluginName = 'atkFileUpload';
+
     /**
      * The uploaded file ID.
      * This ID is return on form submit.
@@ -173,7 +175,7 @@ class Upload extends Input
 
                 if (count($postFiles) > 0 && reset($postFiles)['error'] === 0) {
                     $this->addJsAction(
-                        $this->js()->atkFileUpload('updateField', [$this->fileId, $this->getInputValue()])
+                        $this->js()->{$this->jsPluginName}('updateField', [$this->fileId, $this->getInputValue()])
                     );
                 }
 
@@ -236,7 +238,7 @@ class Upload extends Input
             $this->template->set('Placeholder', $this->placeholder);
         }
 
-        $this->js(true)->atkFileUpload([
+        $this->js(true)->{$this->jsPluginName}([
             'url' => $this->cb->getJsUrl(),
             'action' => $this->action->name,
             'file' => ['id' => $this->fileId ?? $this->entityField->get(), 'name' => $this->getInputValue()],
