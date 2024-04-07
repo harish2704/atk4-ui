@@ -134,9 +134,20 @@ class JsCallback extends Callback
         if ($chain !== null) {
             $jsBlock->addStatement($chain);
         }
-        $jsBlock->addStatement($this->_getProperAction($response));
-
+        $this->responsesToJsBlock($response, $jsBlock);
         return $jsBlock->jsRender();
+    }
+
+    public function responsesToJsBlock( $responses, $jsBlock=null ): JsExpressionable {
+        $jsBlock ??= new JsBlock();
+        foreach ($responses as $item) {
+            if( is_array($item) ){
+                $jsBlock->addStatement( $this->responsesToJsBlock($item) );
+            }else{
+                $jsBlock->addStatement( $this->_getProperAction($item) );
+            }
+        }
+        return $jsBlock;
     }
 
     public function getUrl(string $mode = 'callback'): string
